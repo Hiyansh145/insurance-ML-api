@@ -1,11 +1,24 @@
-import joblib
 import pandas as pd
 import gradio as gr
+import joblib
 
-# Load encoder + model
-ct, model = joblib.load("insurance_pipeline.pkl")
+from huggingface_hub import hf_hub_download
 
 
+# Download model from HuggingFace Hub
+MODEL_REPO = "Hiyansh005/insurance-ml-model"
+FILENAME = "insurance_pipeline.pkl"
+
+model_path = hf_hub_download(
+    repo_id=MODEL_REPO,
+    filename=FILENAME
+)
+
+# Load pipeline
+ct, model = joblib.load(model_path)
+
+
+# Prediction function
 def predict(age, sex, bmi, children, smoker, region):
 
     data = {
@@ -26,6 +39,7 @@ def predict(age, sex, bmi, children, smoker, region):
     return round(float(pred), 2)
 
 
+# Gradio Interface
 app = gr.Interface(
 
     fn=predict,
