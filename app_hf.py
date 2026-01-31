@@ -1,24 +1,21 @@
-import pandas as pd
 import gradio as gr
+import pandas as pd
 import joblib
+import requests
 
-from huggingface_hub import hf_hub_download
+# Download model from GitHub raw
+MODEL_URL = "https://raw.githubusercontent.com/Hiyansh145/insurance-ML-api/main/insurance_pipeline.pkl"
+MODEL_FILE = "insurance_pipeline.pkl"
 
+# Download once
+r = requests.get(MODEL_URL)
+with open(MODEL_FILE, "wb") as f:
+    f.write(r.content)
 
-# Download model from HuggingFace Hub
-MODEL_REPO = "Hiyansh005/insurance-ml-model"
-FILENAME = "insurance_pipeline.pkl"
-
-model_path = hf_hub_download(
-    repo_id=MODEL_REPO,
-    filename=FILENAME
-)
-
-# Load pipeline
-ct, model = joblib.load(model_path)
+# Load model
+ct, model = joblib.load(MODEL_FILE)
 
 
-# Prediction function
 def predict(age, sex, bmi, children, smoker, region):
 
     data = {
@@ -39,7 +36,6 @@ def predict(age, sex, bmi, children, smoker, region):
     return round(float(pred), 2)
 
 
-# Gradio Interface
 app = gr.Interface(
 
     fn=predict,

@@ -1,9 +1,6 @@
 ---
-title: Insurance Cost Predictor
+title: Insurance Predictor
 sdk: gradio
 app_file: app_hf.py
+python_version: "3.10"
 ---
-
-# Insurance Cost Predictor
-
-ML-based medical insurance cost prediction app.
